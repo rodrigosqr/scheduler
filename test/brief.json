@@ -1,0 +1,9 @@
+{
+  "description": "Schedule tests",
+  "name": "scheduler-test",
+  "author": "Bruno Machado",
+  "dependencies": [
+    "thrust-bitcodes/majesty",
+    "coverage"
+  ]
+}

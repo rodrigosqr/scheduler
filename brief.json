@@ -2,9 +2,6 @@
   "description": "Scheduler bitcode",
   "name": "scheduler",
   "path": "index.js",
-  "version": "0.1.0",
-  "author": "Cleverson Puche",
-  "dependencies": {
-    
-  }
+  "version": "0.1.1",
+  "author": "Cleverson Puche"
 }
