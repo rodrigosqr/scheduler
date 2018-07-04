@@ -7,7 +7,7 @@ cache:
   directories:
     - /test/.lib
 
-script: docker run --rm --network="host" -v $(pwd):/app -w /app/test thrustjs/thrust-docker:0.5.3 /bin/sh -c "thrust install && thrust test.js"
+script: docker run --rm -v $(pwd):/app -w /app/test thrustjs/thrust-docker:0.5.3 /bin/sh -c "thrust install && thrust test.js"
 
 deploy:
   provider: releases

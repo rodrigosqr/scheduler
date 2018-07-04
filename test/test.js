@@ -42,8 +42,6 @@ function exec(describe, it, beforeEach, afterEach, expect, should, assert) {
                 let timeBeforeNow = now.plusHours(-1);
                 let timeAfterNow = now.plusHours(2);
 
-                console.log('horários', timeAfterNow, timeBeforeNow)
-
                 tasks = scheduler.dailySchedule(function () {
                     console.log('Rodando task.');
                 }, [timeAfterNow.toString(), timeBeforeNow.toString()]);

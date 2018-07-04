@@ -88,7 +88,7 @@ function dailySchedule(fn, times) {
         return task.cancel(arguments.length == 0 ? false : force)
       },
       getDelay: function (unit) {
-        return task.getDelay(TimeUnit[unit || 'MILLISECONDS'])
+        return Number(task.getDelay(TimeUnit[unit || 'MILLISECONDS']))
       }
     }
   })
