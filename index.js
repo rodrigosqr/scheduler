@@ -3,16 +3,16 @@
  * @Date: 2017-08-16 09:14:44
  */
 
-let Timer = Java.type('java.util.Timer')
-let TimerTask = Java.type('java.util.TimerTask')
+var Timer = Java.type('java.util.Timer')
+var TimerTask = Java.type('java.util.TimerTask')
 
-let Executors = Java.type('java.util.concurrent.Executors')
-let LocalDateTime = Java.type('java.time.LocalDateTime')
-let LocalTime = Java.type('java.time.LocalTime')
-let ChronoUnit = Java.type('java.time.temporal.ChronoUnit')
-let TimeUnit = Java.type('java.util.concurrent.TimeUnit')
+var Executors = Java.type('java.util.concurrent.Executors')
+var LocalDateTime = Java.type('java.time.LocalDateTime')
+var LocalTime = Java.type('java.time.LocalTime')
+var ChronoUnit = Java.type('java.time.temporal.ChronoUnit')
+var TimeUnit = Java.type('java.util.concurrent.TimeUnit')
 
-let _dailyScheduler
+var _dailyScheduler
 
 /**
   * Agenda uma ação para ser executada de tempos em tempos
@@ -29,7 +29,7 @@ let _dailyScheduler
 function schedule(period, startImmediate, action) {
   var timer = new Timer()
 
-  let taskClass = Java.extend(TimerTask, {
+  var taskClass = Java.extend(TimerTask, {
     run: function () {
       /* coverage ignore else */
       if (action && action.constructor.name.toLowerCase() === 'function') {
@@ -45,20 +45,20 @@ function schedule(period, startImmediate, action) {
 
 /**
   * Agenda uma ação para ser executada em horários específicos todos os dias.
-  * 
+  *
   * Será retornado um array com as tasks criadas.
   * As tasks possuem os métodos:
   * - cancel(Boolean force) - Ao passar true a task será interrompida caso esteja sendo executada no momento
   * - getDelay(String timeUnit) - String com a unidade de tempo que o delay deve ser calculado (DAYS|HOURS|MICROSECONDS|MILLISECONDS|MINUTES|NANOSECONDS|SECONDS)
-  * 
+  *
   * @param {Function} action - Função a ser executada
   * @param {Array} times - Array com os horários em que a ação deve ser executada
  * @example
- * let tasks = scheduler.schedule(function() {
+ * var tasks = scheduler.schedule(function() {
  *  print('Rodando task...')
  * }, ['09:30', '17:00'])
  * @returns {Object} Retorna um array com as tasks criadas para cada horário
- * 
+ *
 */
 function dailySchedule(fn, times) {
   /* coverage ignore else */
@@ -66,21 +66,21 @@ function dailySchedule(fn, times) {
     _dailyScheduler = Executors.newScheduledThreadPool(2)
   }
 
-  let nowTime = LocalTime.now().withSecond(0).withNano(0)
-  let now = LocalDateTime.now().withSecond(0).withNano(0);
+  var nowTime = LocalTime.now().withSecond(0).withNano(0)
+  var now = LocalDateTime.now().withSecond(0).withNano(0);
 
   return times.map(function (time) {
-    let timeArr = time.split(':')
+    var timeArr = time.split(':')
     return LocalTime.of(timeArr[0], timeArr[1])
   }).map(function (time) {
-    let firstExecution = now.withHour(time.getHour()).withMinute(time.getMinute())
+    var firstExecution = now.withHour(time.getHour()).withMinute(time.getMinute())
 
     /* coverage ignore else */
     if (time.compareTo(nowTime) <= 0) {
       firstExecution = firstExecution.plusDays(1)
     }
 
-    let initDelay = LocalDateTime.now().until(firstExecution, ChronoUnit.SECONDS)
+    var initDelay = LocalDateTime.now().until(firstExecution, ChronoUnit.SECONDS)
     return _dailyScheduler.scheduleAtFixedRate(fn, initDelay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS)
   }).map(function (task) {
     return {
