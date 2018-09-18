@@ -6,6 +6,8 @@
 var Timer = Java.type('java.util.Timer')
 var TimerTask = Java.type('java.util.TimerTask')
 
+var Runnable = Java.type('java.lang.Runnable')
+
 var Executors = Java.type('java.util.concurrent.Executors')
 var LocalDateTime = Java.type('java.time.LocalDateTime')
 var LocalTime = Java.type('java.time.LocalTime')
@@ -29,7 +31,7 @@ var _dailyScheduler
 function schedule(period, startImmediate, action) {
   var timer = new Timer()
 
-  var taskClass = Java.extend(TimerTask, {
+  var TaskClass = Java.extend(TimerTask, {
     run: function () {
       /* coverage ignore else */
       if (action && action.constructor.name.toLowerCase() === 'function') {
@@ -38,7 +40,7 @@ function schedule(period, startImmediate, action) {
     }
   })
 
-  timer.schedule(new taskClass(), startImmediate ? 0 : period, period)
+  timer.schedule(new TaskClass(), startImmediate ? 0 : period, period)
 
   return timer
 }
@@ -80,8 +82,15 @@ function dailySchedule(fn, times) {
       firstExecution = firstExecution.plusDays(1)
     }
 
+    var TaskClass = Java.extend(Runnable, {
+      run: function () {
+        /* coverage ignore next */
+        fn();
+      }
+    });
+
     var initDelay = LocalDateTime.now().until(firstExecution, ChronoUnit.SECONDS)
-    return _dailyScheduler.scheduleAtFixedRate(fn, initDelay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS)
+    return _dailyScheduler.scheduleAtFixedRate(new TaskClass(), initDelay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS)
   }).map(function (task) {
     return {
       cancel: function cancelTask(force) {

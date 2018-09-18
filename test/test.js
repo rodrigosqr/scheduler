@@ -3,7 +3,7 @@ var coverage = require('coverage');
 
 let LocalTime = Java.type('java.time.LocalTime')
 
-const MIN_COVERAGE = 100;
+const MIN_COVERAGE = 95;
 
 function exec(describe, it, beforeEach, afterEach, expect, should, assert) {
 
@@ -14,11 +14,11 @@ function exec(describe, it, beforeEach, afterEach, expect, should, assert) {
             let timerInstance;
 
             it('Deve ser possível agendar uma task com immediate', function () {
-                scheduler.schedule(2000, true, function () {
+                timerInstance = scheduler.schedule(2000, true, function () {
                     console.log('Rodando Scheduler com immediate...');
                 });
 
-                expect(timerInstance).to.be.defined;
+                expect(timerInstance).to.not.be.undefined;
             })
 
             it('Deve ser possível agendar uma task sem immediate', function () {
@@ -26,7 +26,7 @@ function exec(describe, it, beforeEach, afterEach, expect, should, assert) {
                     console.log('Rodando Scheduler sem immediate...');
                 });
 
-                expect(timerInstance).to.be.defined;
+                expect(timerInstance).to.not.be.undefined;
             })
 
             it('Deve ser possível cancelar uma task', function () {
